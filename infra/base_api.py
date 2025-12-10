@@ -28,6 +28,23 @@ class BaseApi:
             return ResponseWrapper(False, 500, {"error": str(e)})
 
     @staticmethod
+    def put_api_call(end_point, payload):
+        full_url = BASE_URL + end_point
+        try:
+            response = requests.put(full_url, json=payload)
+
+            try:
+                data = response.json()
+            except requests.exceptions.JSONDecodeError:
+                data = None
+
+            return ResponseWrapper(response.ok, response.status_code, data)
+
+        except requests.exceptions.RequestException as e:
+            print(f"Error during PUT request to {full_url}: {e}")
+            return ResponseWrapper(False, 500, {"error": str(e)})
+
+    @staticmethod
     def delete_api_call(end_point):
         url = BASE_URL + end_point
         try:
